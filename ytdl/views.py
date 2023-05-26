@@ -11,6 +11,7 @@ from .models import User
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import authenticate, login,logout
 import requests
+from .utils import get_hotels
 
 
 def login(request):
@@ -123,6 +124,7 @@ def home(request):
         address = request.POST.get('address', '')
         context['address'] = address
         context['places'] = get_nearby_places(address)
+        print(context)
 
     return render(request, 'index.html', context)
 
@@ -174,3 +176,17 @@ def get_nearby_places(address):
 
 def display_map(request):
     return render(request, 'map.html')
+
+def search_hotels(request):
+    if request.method == "POST":
+        location = request.POST.get("location", "")
+        hotels = get_hotels(location)
+
+        context = {
+            "location": location,
+            "hotels": hotels
+        }
+        print(context)
+        return render(request, "hotels.html", context)
+
+    return render(request, "search.html")

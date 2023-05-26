@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <title>Hotels in Pune</title>
+   <script type="text/javascript" src="https://www.bing.com/api/maps/mapcontrol?callback=loadMapScenario" async defer></script>
+   <script type="text/javascript">
+       function loadMapScenario() {
+           var map = new Microsoft.Maps.Map('#map', {
+               credentials: 'AnRNicGadpqWZhntIcPHtRyNh-RLVUlurcE2UYWnxTpHdWMaHCed9lbG0HulN5WR',
+           });
+
+           var hotels = JSON.parse('{{ hotels|escapejs }}');
+
+           hotels.forEach(function(hotel) {
+               var location = new Microsoft.Maps.Location(hotel.latitude, hotel.longitude);
+               var infobox = new Microsoft.Maps.Infobox(location, {
+                   title: hotel.name,
+                   description: hotel.address
+               });
+               map.entities.push(infobox);
+           });
+       }
+   </script>
+   <style>
+       #map {
+           height: 400px;
+           width: 100%;
+       }
+   </style>
+</head>
+<body>
+   <h1>Hotels in Pune</h1>
+   <div id="map"></div>
+</body>
+</html>
+
+
+
+
+
