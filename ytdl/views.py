@@ -124,6 +124,7 @@ def home(request):
         address = request.POST.get('address', '')
         context['address'] = address
         context['places'] = get_nearby_places(address)
+        print(context)
 
     return render(request, 'index.html', context)
 
