@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bing Maps Integration</title>
+    <script src="https://www.bing.com/api/maps/mapcontrol?key=AnRNicGadpqWZhntIcPHtRyNh-RLVUlurcE2UYWnxTpHdWMaHCed9lbG0HulN5WR"></script>
+    <style>
+        #map {
+            width: 1000px;
+            height: 1000px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bing Maps Integration</h1>
+
+    <div id="map"></div>
+
+    <script>
+        function initMap() {
+            var map = new Microsoft.Maps.Map('#map', {
+                center: new Microsoft.Maps.Location(37.422, -122.084),
+                zoom: 15
+            });
+
+            // Geocode example
+            var address = "1600 Amphitheatre Parkway, Mountain View, CA";
+            var geocodeRequest = "https://dev.virtualearth.net/REST/v1/Locations?addressLine=" + encodeURIComponent(address) + "&key=AnRNicGadpqWZhntIcPHtRyNh-RLVUlurcE2UYWnxTpHdWMaHCed9lbG0HulN5WR";
+            fetch(geocodeRequest)
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    var resourceSet = data.resourceSets[0];
+                    if (resourceSet.estimatedTotal > 0) {
+                        var location = resourceSet.resources[0].point.coordinates;
+                        var latitude = location[0];
+                        var longitude = location[1];
+
+                        // Set the map center to the geocoded location
+                        map.setView({ center: new Microsoft.Maps.Location(latitude, longitude) });
+
+                        // Add a pushpin at the geocoded location
+                        var pushpin = new Microsoft.Maps.Pushpin(new Microsoft.Maps.Location(latitude, longitude));
+                        map.entities.push(pushpin);
+                    }
+                });
+
+            // Directions example
+            var origin = "Seattle, WA";
+            var destination = "San Francisco, CA";
+            var directionsRequest = "https://dev.virtualearth.net/REST/V1/Routes/Driving?o=" + encodeURIComponent(origin) + "&d=" + encodeURIComponent(destination) + "&key=AnRNicGadpqWZhntIcPHtRyNh-RLVUlurcE2UYWnxTpHdWMaHCed9lbG0HulN5WR";
+            fetch(directionsRequest)
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    var routeLeg = data.resourceSets[0].resources[0].routeLegs[0];
+                    var itineraryItems = routeLeg.itineraryItems;
+
+                    var directionsList = document.createElement("ol");
+                    directionsList.setAttribute("id", "directions-list");
+
+                    itineraryItems.forEach(function (item) {
+                        var instruction = item.instruction.text;
+                        var listItem = document.createElement("li");
+                        listItem.textContent = instruction;
+                        directionsList.appendChild(listItem);
+                    });
+
+                    document.body.appendChild(directionsList);
+                });
+        }
+    </script>
+
+    <script>
+        // Load the map control asynchronously
+        function loadMapScenario() {
+            if (typeof Microsoft !== 'undefined' && typeof Microsoft.Maps !== 'undefined') {
+                initMap();
+            } else {
+                setTimeout(loadMapScenario, 100);
+            }
+        }
+
+        loadMapScenario();
+    </script>
+</body>
+</html>
