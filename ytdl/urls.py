@@ -23,5 +23,6 @@ urlpatterns = [
     path('home/', views.download_video, name='home'),
     path('bing/', views.home, name='bing'),
     path('nearby-places/', views.get_nearby_places, name='nearby-places'),
-    path('map/', views.display_map, name='map')
+    path('map/', views.display_map, name='map'),
+    path('search_hotels/', views.search_hotels, name='search_hotels')
 ]

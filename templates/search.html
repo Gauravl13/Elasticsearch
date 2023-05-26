@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hotel Search</title>
+</head>
+<body>
+    <h1>Hotel Search</h1>
+    <form method="post" action="{% url 'search_hotels' %}">
+        {% csrf_token %}
+        <label for="location">Enter your location:</label>
+        <input type="text" id="location" name="location">
+        <input type="submit" value="Search">
+    </form>
+</body>
+</html>
